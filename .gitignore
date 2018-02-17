@@ -1,6 +1,7 @@
 *.pkl
 emails_by_address/
 *.pdf
+.ipynb_checkpoints
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
