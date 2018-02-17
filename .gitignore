@@ -1,3 +1,7 @@
+*.pkl
+emails_by_address/
+*.pdf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
