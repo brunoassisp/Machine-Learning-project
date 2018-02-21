@@ -1,5 +1,5 @@
 # Enron-ML-project (in construction :construction_worker:)
-The **Enron Corporation**, once a huge company from the american electric market, was involved in one of the biggest fraudes ever seem. A lot of data related to **Enron** was made public, and posted to the web. 
+The **Enron Corporation**, which was once a huge company from the american electric market, was involved in one of the biggest frauds ever seen. A lot of data related to **Enron** was made public, and posted to the web.
 
 This dataset is composed by emails and detailed financial data that is typically confidential data.
 
