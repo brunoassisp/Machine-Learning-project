@@ -5,7 +5,7 @@ This dataset is composed by emails and detailed financial data that are typicall
 
 This project was developed during the **Intro to Machine Learning** module of the **Data Analyst Nanodegree** course from [**Udacity**](http://udacity.com/) and it used **Enron's emails dataset**.
 
-Take a look at my project! :) 
-Click [here](https://github.com/brunoassisp/Machine-Learning-project/blob/master/Enron-ML-Project.ipynb)!
+Take a look at my project! :yum: 
+Click [here](https://github.com/brunoassisp/Machine-Learning-project/blob/master/Enron-ML-Project.ipynb)! :point_left:
 
 LINK: https://www.cs.cmu.edu/~enron/
