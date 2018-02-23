@@ -1,4 +1,3 @@
-*.pkl
 emails_by_address/
 *.pdf
 .ipynb_checkpoints
