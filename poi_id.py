@@ -10,7 +10,7 @@ import math
 from itertools import combinations
 
 from feature_format import featureFormat, targetFeatureSplit
-from tester import dump_classifier_and_data
+from tester import dump_classifier_and_data, test_classifier
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
@@ -24,8 +24,10 @@ enron_df = pd.DataFrame.from_dict(data_dict, orient='index')
 ### Replacing NaN's
 enron_df.replace(to_replace={'NaN':0}, inplace=True)
 
-### Removing identified outlier
+### Removing identified outliers
 enron_df.drop('TOTAL', inplace=True)
+enron_df.drop('LOCKHART EUGENE E', inplace=True)
+enron_df.drop('THE TRAVEL AGENCY IN THE PARK', inplace=True)
 
 ### Removing 'poi' and the categorical variable 'email_address'
 cols_to_analyse = [x for x in enron_df.columns if x not in ['poi', 'email_address']]
@@ -91,17 +93,13 @@ columns_list = enron_df[selected_idx].columns.tolist()
 from sklearn.model_selection import GridSearchCV
 
 ### Testing different Machine Learning approaches
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.svm import SVC
-# from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-# from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 parameters = {
-    'learning_rate': [1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2],
-    'n_estimators': [10],
-    'random_state': [511]
+    'learning_rate': [1, 1.2, 1.25, 1.3, 1.35, 1.4],
+    'n_estimators': [5],
+    'random_state': [511]    
 }
 
 ada = AdaBoostClassifier()
@@ -110,27 +108,37 @@ clf = GridSearchCV(ada, parameters, scoring=['precision', 'recall'], refit='prec
 
 clf.fit(features_train_selected, labels_train)
 
-pred = clf.predict(features_test_selected)
+### The scores can be seen by uncommenting the next line
+# test_classifier(clf, my_dataset, features_list)
 
-result = {}
-result['AdaBoost'] = {
-        'classifier': clf.best_estimator_,
-        'accuracy_score': accuracy_score(labels_test, pred),
-        'precision_score': precision_score(labels_test, pred),
-        'recall_score': recall_score(labels_test, pred)
-    }
+### ------------------------------------ ###
 
-### Print result
-# for k in result.keys():
-#     print k
-#     print result[k]['classifier']
-#     print 'Accuracy:',result[k]['accuracy_score']
-#     print 'Precision:',result[k]['precision_score']
-#     print 'Recall:',result[k]['recall_score']
-#     print
-
-clf = result['AdaBoost']['classifier']
+### Testing classifier with new features
 my_dataset = enron_df.to_dict(orient='index')
-features_list = ['poi'] + columns_list
+
+### Defining a list of features that contains the new variables
+### This new list has the same length used by the SelectKBest
+features = enron_df[['from_poi_percent', 'to_poi_percent', 'more_to_than_from',\
+                     'long_term_incentive', 'expenses', 'shared_receipt_with_poi']]
+labels = enron_df['poi']
+
+### Splitting and Scaling the data in the same way as before
+features_train, features_test, labels_train, labels_test = model_selection.train_test_split(
+    features.values, labels, test_size=0.3, random_state=42)
+
+scaler = MinMaxScaler()
+scaler.fit(features_train)
+
+features_train = scaler.transform(features_train)
+features_test = scaler.transform(features_test)
+
+### Testing classifier
+clf = AdaBoostClassifier(learning_rate=1.2, n_estimators=5, random_state=511)
+clf.fit(features_train, labels_train)
+
+features_list = ['poi'] + features.columns.tolist()
+
+### The scores can be seen by uncommenting the next line
+# test_classifier(clf, my_dataset, features_list)
 
 dump_classifier_and_data(clf, my_dataset, features_list)
